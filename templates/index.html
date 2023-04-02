@@ -6,6 +6,13 @@
     }
   </style>
 
+  <script>
+    document.getElementById("title_search").onclick = function() {
+      title = document.getElementById("title").value
+      location.href = "/search/title/" + title
+    }
+  </script>
+
   <body>
     <div class="header-div">
       <h1>Great Reads</h1>
@@ -14,13 +21,12 @@
     <div class="search-bar-div">
       <form action="/search">
         <p>
-          Search for books: <input type="text" name="name" />
-          <input type="submit" value="Search" />
+          Search by title: <input type="text" name="name" id="title"/>
+          <button id="title_search">Search</button>
         </p>
-        <p>Search by: <select name="searchby">
-          <option value="title">Title</option>
-          <option value="author">Author</option>
-          </select>
+        <p>
+          Search by author: <input type="text" name="name" />
+          <input type="submit" value="Search" />
         </p>
       </form>
     </div>
