@@ -6,27 +6,6 @@
     }
   </style>
 
-  <script>
-   function search_title(search){
-    console.log(search)
-    $.ajax({
-      type: "POST",
-      url: "/search/title",
-      dataType: "json",
-      data: JSON.stringify(search),
-      contentType: "application/json; charset=UTF-8",
-      success: function(result){
-        window.location.href = "/search/title"
-      }
-    })
-  }
-
-    document.getElementById("title_search").onclick = function(){
-      window.location.href = "/search/title"
-    }
-
-
-  </script>
 
   <body>
     <div class="header-div">
@@ -37,7 +16,8 @@
       <form action="/search">
         <p>
           Search by title: <input type="text" name="name" id="title"/>
-          <button id="title_search">Search</button>
+          <input type="submit" value="Search" />
+          <a href="/search/title">Search</a>
         </p>
         <p>
           Search by author: <input type="text" name="name" />

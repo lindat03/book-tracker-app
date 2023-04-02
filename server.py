@@ -129,8 +129,10 @@ def collection():
     return render_template("collection.html")
 
 
+
+
 # search database by book title
-app.route('/search/title', methods=['GET', 'POST'])
+app.route('/search/title')
 def title_search():
 
     book_title = "The Hunger Games"
@@ -143,8 +145,9 @@ def title_search():
             relevant.append(book[1])
     cursor.close
 
-    book_information = dict(relevant)
-    return render_template("search.html", book_information=book_information)
+    info = dict(relevant)
+
+    return render_template("search.html", **info)
 
 
 # search database by author
