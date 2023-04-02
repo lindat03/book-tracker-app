@@ -175,7 +175,6 @@ def index():
 
 @app.route('/search')
 def search():
-    search_type = 
     return render_template("search.html")
 
 @app.route('/collection')
@@ -185,7 +184,7 @@ def collection():
 
 
 # search database by book title
-app.route('/index/title/<book_title>')
+app.route('/search/title/<book_title>')
 def title_search(book_title):
     select_query = "SELECT * FROM book"
     cursor = g.conn.execute(text(select_query))
@@ -199,7 +198,7 @@ def title_search(book_title):
     return render_template("search.html", book_information=book_information)
 
 # search database by author
-app.route('/index/author/<author>')
+app.route('/search/author/<author>')
 def title_search(author):
     select_query = "SELECT * FROM author"
     cursor = g.conn.execute(text(select_query))
