@@ -173,10 +173,15 @@ def index():
 #
 
 
-@app.route('/search', methods=['POST'])
+@app.route('/search')
 def search():
     search_type = 
     return render_template("search.html")
+
+@app.route('/collection')
+def collection():
+
+    return render_template("collection.html")
 
 
 # search database by book title
