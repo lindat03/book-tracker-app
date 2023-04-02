@@ -144,7 +144,7 @@ def title_search():
     cursor.close
 
     book_information = dict(relevant)
-    return render_template("search.html", jsonify(book_information=book_information))
+    return render_template("search.html", book_information=book_information)
 
 
 # search database by author
