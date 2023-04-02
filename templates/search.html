@@ -1,0 +1,27 @@
+<html>
+  <style>
+    body {
+      font-size: 15pt;
+      font-family: arial;
+    }
+  </style>
+
+  <body>
+    <h1>Search Results</h1>
+    <p><a href="/">Back to Homepage</a></p>
+
+    <form action="/search">
+      <p>
+        Search for books: <input type="text" name="name" />
+        <input type="submit" value="Search" />
+      </p>
+      <p>
+        Search by:
+        <select name="searchby">
+          <option value="title">Title</option>
+          <option value="author">Author</option>
+        </select>
+      </p>
+    </form>
+  </body>
+</html>

@@ -1,29 +1,35 @@
 <html>
   <style>
-    body{ 
+    body {
       font-size: 15pt;
       font-family: arial;
     }
   </style>
 
+  <body>
+    <h1>Great Reads</h1>
+    <p><a href="user">My Profile</a></p>
+    <form action="/search">
+      <p>
+        Search for books: <input type="text" name="name" />
+        <input type="submit" value="Search" />
+      </p>
+      <p>Search by: <select name="searchby">
+        <option value="title">Title</option>
+        <option value="author">Author</option>
+        </select>
+      </p>
+    </form>
+    <p>Top 10 Books of All Time</p>
 
-<body>
-  <h1>Some famous Computer Scientists</h1>
-  <div>{{data}}</div>
-
-  <div>
-    {% for n in data %}
-    <div>{{n}}</div>
-    {% endfor %}
-  </div>
-
-<p><a href="another">Go to the other page</a></p>
-
-<form method="POST" action="/add">
-<p>Name of new computer scientist: <input type="text" name="name"> <input type="submit" value="Add"></p>
-</form>
-
-</body>
+    <div>
+      <p>
+        {% for n in data %}
+        <div>{{n}}</div>
+        {% endfor %}
+      </p>
+    </div>
 
 
+  </body>
 </html>
