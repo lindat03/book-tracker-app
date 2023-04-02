@@ -4,24 +4,46 @@
       font-size: 15pt;
       font-family: arial;
     }
+    .book-container{
+        border: 1mm;
+    }
   </style>
 
   <body>
-    <h1>Search Results</h1>
-    <p><a href="/">Back to Homepage</a></p>
-
-    <form action="/search">
-      <p>
-        Search for books: <input type="text" name="name" />
-        <input type="submit" value="Search" />
-      </p>
-      <p>
-        Search by:
-        <select name="searchby">
-          <option value="title">Title</option>
-          <option value="author">Author</option>
-        </select>
-      </p>
-    </form>
+    <div class="header-div">
+        <h1>Search Results</h1>
+        <p><a href="/">Back to Homepage</a></p>
+    </div>
+    <div class="search-bar-div">
+        <form action="/search">
+            <p>
+              Search for books: <input type="text" name="name" />
+              <input type="submit" value="Search" />
+            </p>
+            <p>
+              Search by:
+              <select name="searchby">
+                <option value="title">Title</option>
+                <option value="author">Author</option>
+              </select>
+            </p>
+        </form>
+        <h2>Sort By:</h2>
+        <button type="button">Ratings</button>
+        <button type="button">Date Published</button>
+    </div>
+    <div class="search-results-div">
+        <div class="book-container">
+            <h3 class="book-title">
+              Book Title
+            </h3>
+            <p class="book-author">Book Author</p>
+            <p class="book-description">Description</p>
+            <p class="book-rating">Rating</p>
+            <p class="book-publish-date">Date Published</p>
+            <button>Review</button>
+            <button>Add to Collection</button>
+          </div>
+    </div>
   </body>
 </html>

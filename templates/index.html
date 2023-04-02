@@ -7,28 +7,39 @@
   </style>
 
   <body>
-    <h1>Great Reads</h1>
-    <p><a href="user">My Profile</a></p>
-    <form action="/search">
-      <p>
-        Search for books: <input type="text" name="name" />
-        <input type="submit" value="Search" />
-      </p>
-      <p>Search by: <select name="searchby">
-        <option value="title">Title</option>
-        <option value="author">Author</option>
-        </select>
-      </p>
-    </form>
-    <p>Top 10 Books of All Time</p>
-
-    <div>
-      <p>
-        {% for n in data %}
-        <div>{{n}}</div>
-        {% endfor %}
-      </p>
+    <div class="header-div">
+      <h1>Great Reads</h1>
+      <p><a href="user">My Profile</a></p>  
     </div>
+    <div class="search-bar-div">
+      <form action="/search">
+        <p>
+          Search for books: <input type="text" name="name" />
+          <input type="submit" value="Search" />
+        </p>
+        <p>Search by: <select name="searchby">
+          <option value="title">Title</option>
+          <option value="author">Author</option>
+          </select>
+        </p>
+      </form>
+    </div>
+    <div class="featured-books-div">
+      <h2>Popular Classics</h2>
+
+      <div>
+        <p>
+          {% for n in data %}
+          <div>{{n}}</div>
+          {% endfor %}
+        </p>
+      </div>
+
+      <h2>Popular Fantasy Books</h2>
+
+      <h2>Popular Realistic Fiction Books</h2>
+    </div>
+
 
 
   </body>
