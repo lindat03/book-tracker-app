@@ -175,8 +175,44 @@ def index():
 
 @app.route('/search', methods=['POST'])
 def search():
-
+    search_type = 
     return render_template("search.html")
+
+
+# search database by book title
+app.route('/index/title/<book_title>')
+def title_search(book_title):
+    select_query = "SELECT * FROM book"
+    cursor = g.conn.execute(text(select_query))
+    relevant = []
+    for book in cursor:
+        if book_title in book[0]:
+            relevant.append(book[1])
+    cursor.close
+
+    book_information = dict(relevant)
+    return render_template("search.html", book_information=book_information)
+
+# search database by author
+app.route('/index/author/<author>')
+def title_search(author):
+    select_query = "SELECT * FROM author"
+    cursor = g.conn.execute(text(select_query))
+    author_id = 0
+    for author in cursor:
+        if author in author[1]:
+            author_id = author[0]
+    
+    select_query = "SELECT * FROM book"
+    cursor = g.conn.execute(text(select_query))
+    relevant = []
+    for book in cursor:
+        if book[2] == author_id:
+            relevant.append(book[0])
+    cursor.close
+
+    book_information = dict(relevant)
+    return render_template("search.html", book_information=book_information)
 
 
 @app.route('/user')
