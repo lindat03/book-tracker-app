@@ -8,9 +8,9 @@
 
   <script>
     document.getElementById("title_search").onclick = function() {
-      title = document.getElementById("title").value
+      let title = document.getElementById("title").value
       console.log(title)
-      location = "/search/title/" + title
+      let location = "/search/title/" + title
       console.log(location)
       location.href = location
     }
