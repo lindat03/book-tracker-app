@@ -16,15 +16,15 @@
       data: JSON.stringify(search),
       contentType: "application/json; charset=UTF-8",
       success: function(result){
-        window.location.href = "/search/title" + search
+        window.location.href = "/search/title/" + search
       }
     })
+  }
 
     document.getElementById("title_search").onclick = function(){
       title = document.getElementById("title").value
       search_title(title)
     }
-   }
 
 
   </script>

@@ -130,7 +130,7 @@ def collection():
 
 
 # search database by book title
-app.route('/search/title')
+app.route('/search/title', methods=['GET', 'POST'])
 def title_search():
 
     book_title = request.get_json()
