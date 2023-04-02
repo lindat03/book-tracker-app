@@ -34,31 +34,14 @@ app = Flask(__name__, template_folder=tmpl_dir)
 DATABASE_USERNAME = "lt2899"
 DATABASE_PASSWRD = "3463"
 # change to 34.28.53.86 if you used database 2 for part 2
-DATABASE_HOST = "34.148.107.47"
-DATABASEURI = "postgresql://lt2899:3463@34.148.107.47/project1"
+DATABASE_HOST = "34.73.36.248"
+DATABASEURI = "postgresql://lt2899:3463@34.73.36.248/project1"
 
 
 #
 # This line creates a database engine that knows how to connect to the URI above.
 #
 engine = create_engine(DATABASEURI)
-
-#
-# Example of running queries in your database
-# Note that this will probably not work if you already have a table named 'test' in your database, containing meaningful data. This is only an example showing you how to run queries in your database using SQLAlchemy.
-#
-with engine.connect() as conn:
-    create_table_command = """
-	CREATE TABLE IF NOT EXISTS test (
-		id serial,
-		name text
-	)
-	"""
-    res = conn.execute(text(create_table_command))
-    insert_table_command = """INSERT INTO test(name) VALUES ('grace hopper'), ('alan turing'), ('ada lovelace')"""
-    res = conn.execute(text(insert_table_command))
-    # you need to commit for create, insert, update queries to reflect
-    conn.commit()
 
 
 @app.before_request
@@ -92,18 +75,6 @@ def teardown_request(exception):
 
 
 #
-# @app.route is a decorator around index() that means:
-#   run index() whenever the user tries to access the "/" path using a GET request
-#
-# If you wanted the user to go to, for example, localhost:8111/foobar/ with POST or GET then you could use:
-#
-#       @app.route("/foobar/", methods=["POST", "GET"])
-#
-# PROTIP: (the trailing / in the path is important)
-#
-# see for routing: https://flask.palletsprojects.com/en/1.1.x/quickstart/#routing
-# see for decorators: http://simeonfranklin.com/blog/2012/jul/1/python-decorators-in-12-steps/
-#
 @app.route('/')
 def index():
     """
@@ -129,31 +100,7 @@ def index():
         titles.append(result[0])
     cursor.close()
 
-    #
-    # Flask uses Jinja templates, which is an extension to HTML where you can
-    # pass data to a template and dynamically generate HTML based on the data
-    # (you can think of it as simple PHP)
-    # documentation: https://realpython.com/primer-on-jinja-templating/
-    #
-    # You can see an example template in templates/index.html
-    #
-    # context are the variables that are passed to the template.
-    # for example, "data" key in the context variable defined below will be
-    # accessible as a variable in index.html:
-    #
-    #     # will print: [u'grace hopper', u'alan turing', u'ada lovelace']
-    #     <div>{{data}}</div>
-    #
-    #     # creates a <div> tag for each element in data
-    #     # will print:
-    #     #
-    #     #   <div>grace hopper</div>
-    #     #   <div>alan turing</div>
-    #     #   <div>ada lovelace</div>
-    #     #
-    #     {% for n in data %}
-    #     <div>{{n}}</div>
-    #     {% endfor %}
+    
     #
     context = dict(data=titles)
 
