@@ -133,7 +133,7 @@ def collection():
 app.route('/search/title', methods=['GET', 'POST'])
 def title_search():
 
-    book_title = request.get_json()
+    book_title = "The Hunger Games"
 
     select_query = "SELECT * FROM book"
     cursor = g.conn.execute(text(select_query))
