@@ -7,13 +7,26 @@
   </style>
 
   <script>
-    document.getElementById("title_search").onclick = function() {
-      let title = document.getElementById("title").value
-      console.log(title)
-      let location = "/search/title/{{title}}"
-      console.log(location)
-      location.href = location
+   function search_title(search){
+    console.log(search)
+    $.ajax({
+      type: "POST",
+      url: "/search/title",
+      dataType: "json",
+      data: JSON.stringify(search),
+      contentType: "application/json; charset=UTF-8",
+      success: function(result){
+        window.location.href = "/search/title" + search
+      }
+    })
+
+    document.getElementById("title_search").onclick = function(){
+      title = document.getElementById("title").value
+      search_title(title)
     }
+   }
+
+
   </script>
 
   <body>

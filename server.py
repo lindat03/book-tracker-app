@@ -12,7 +12,7 @@ import os
 # accessible as a variable in index.html:
 from sqlalchemy import *
 from sqlalchemy.pool import NullPool
-from flask import Flask, request, render_template, g, redirect, Response
+from flask import Flask, request, render_template, g, redirect, Response, jsonify
 
 tmpl_dir = os.path.join(os.path.dirname(
     os.path.abspath(__file__)), 'templates')
@@ -130,8 +130,11 @@ def collection():
 
 
 # search database by book title
-app.route('/search/title/<book_title>')
-def title_search(book_title):
+app.route('/search/title')
+def title_search():
+
+    book_title = request.get_json()
+
     select_query = "SELECT * FROM book"
     cursor = g.conn.execute(text(select_query))
     relevant = []
@@ -141,7 +144,8 @@ def title_search(book_title):
     cursor.close
 
     book_information = dict(relevant)
-    return render_template("search.html", book_information=book_information)
+    return render_template("search.html", jsonify(book_information=book_information))
+
 
 # search database by author
 app.route('/search/author/<author>')

@@ -9,13 +9,17 @@
     }
   </style>
 
+  <script>
+    let book_information = {{book_information|tojson}}
+  </script>
+
   <body>
     <div class="header-div">
         <h1>Search Results</h1>
         <p><a href="/">Back to Homepage</a></p>
     </div>
     <div class="search-bar-div">
-        <form action="/search">
+        <form action="/search/">
             <p>
               Search for books: <input type="text" name="name" />
               <input type="submit" value="Search" />
