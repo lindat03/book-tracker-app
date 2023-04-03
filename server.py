@@ -132,22 +132,22 @@ def collection():
 
 
 # search database by book title
-app.route('/search/title')
-def title_search():
+@app.route('/search/title/<title>')
+def title_search(title):
 
-    book_title = "The Hunger Games"
+    relevant = []
+    ids = []
 
     select_query = "SELECT * FROM book"
     cursor = g.conn.execute(text(select_query))
     relevant = []
     for book in cursor:
-        if book_title in book[0]:
+        if title in book[1]:
             relevant.append(book[1])
+            ids.append(book[0])
     cursor.close
 
-    info = dict(relevant)
-
-    return render_template("search.html", **info)
+    return render_template("search.html", titles=relevant, ids=ids)
 
 
 # search database by author
