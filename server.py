@@ -42,6 +42,9 @@ DATABASEURI = f"postgresql://{DATABASE_USERNAME}:{DATABASE_PASSWRD}@{DATABASE_HO
 #
 engine = create_engine(DATABASEURI)
 
+# active user id
+USER = 2
+
 
 @app.before_request
 def before_request():
@@ -76,16 +79,6 @@ def teardown_request(exception):
 #
 @app.route('/')
 def index():
-    """
-    request is a special object that Flask provides to access web request information:
-
-    request.method:   "GET" or "POST"
-    request.form:     if the browser submitted a form, this contains the data in the form
-    request.args:     dictionary of URL arguments, e.g., {a:1, b:2} for http://localhost?a=1&b=2
-
-    See its API: https://flask.palletsprojects.com/en/1.1.x/api/#incoming-request-data
-    """
-
     # DEBUG: this is debugging code to see what request looks like
     print(request.args)
 
@@ -198,7 +191,7 @@ def book_page(title):
 @app.route('/user')
 def user():
 
-    select_query = "SELECT name from collection"
+    select_query = "SELECT name from collection WHERE user_id=" + str(USER)
     cursor = g.conn.execute(text(select_query))
     collectionnames = []
     for result in cursor:
