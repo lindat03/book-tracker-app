@@ -135,7 +135,6 @@ def collection():
 @app.route('/search/title/<title>')
 def title_search(title):
 
-    relevant = []
     ids = []
 
     select_query = "SELECT * FROM book"
@@ -151,25 +150,27 @@ def title_search(title):
 
 
 # search database by author
-app.route('/search/author/<author>')
-def title_search(author):
+@app.route('/search/author/<author>')
+def author_search(author):
+
     select_query = "SELECT * FROM author"
     cursor = g.conn.execute(text(select_query))
-    author_id = 0
-    for author in cursor:
-        if author in author[1]:
-            author_id = author[0]
-    
-    select_query = "SELECT * FROM book"
-    cursor = g.conn.execute(text(select_query))
-    relevant = []
-    for book in cursor:
-        if book[2] == author_id:
-            relevant.append(book[0])
+    author_ids = []
+    for person in cursor:
+        if author in person[1]:
+            author_ids.append(person[0])
     cursor.close
 
-    book_information = dict(relevant)
-    return render_template("search.html", book_information=book_information)
+    cursor = g.conn.execute(text("SELECT * FROM book"))
+    relevant = []
+    ids = []
+    for book in cursor:
+        if book[2] in author_ids:
+            relevant.append(book[1])
+            ids.append(book[0])
+    cursor.close
+
+    return render_template("search.html", titles=relevant, ids=ids)
 
 
 @app.route('/user')

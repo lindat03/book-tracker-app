@@ -8,10 +8,14 @@
 
   <script>
     document.getElementById("title_search").addEventListener("click", search())
-    function search(){
+    function tsearch(){
       let title = document.getElementById("title").value
-      console.log("HI")
       window.location = window.location.href + 'search/title/' + title
+    }
+    document.getElementById("author_search").addEventListener("click", search())
+    function asearch(){
+      let author = document.getElementById("author").value
+      window.location = window.location.href + 'search/author/' + author
     }
   </script>
 
@@ -24,11 +28,11 @@
     <div class="search-bar-div">
       <p>
         Search by title: <input type="text" name="name" id="title"/>
-        <button id="title_search" onclick="search()">Search</button>
+        <button id="title_search" onclick="tsearch()">Search</button>
       </p>
       <p>
-        Search by author: <input type="text" name="name" />
-        <input type="submit" value="Search" />
+        Search by author: <input type="text" name="name" id="author"/>
+        <button id="author_search" onclick="asearch()">Search</button>
       </p>
     </div>
     <div class="featured-books-div">
