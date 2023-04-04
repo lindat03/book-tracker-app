@@ -17,6 +17,9 @@
       let author = document.getElementById("author").value
       window.location = window.location.href + 'search/author/' + author
     }
+    function load_book(title){
+      window.location.replace("/book/" + title)
+    }
   </script>
 
 
@@ -41,7 +44,7 @@
       <div>
         <p>
           {% for n in data %}
-          <a class="book" href="book/{{n}}">{{n}}</a>
+          <div class="book" onclick="load_book(this.innerHTML)">{{n}}</div>
           {% endfor %}
         </p>
       </div>
