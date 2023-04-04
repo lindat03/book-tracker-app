@@ -172,6 +172,28 @@ def author_search(author):
 
     return render_template("search.html", titles=relevant, ids=ids)
 
+@app.route('/book/<title>')
+def book_page(title):
+    select_query = "SELECT * FROM book WHERE title='" + title + "'"
+    cursor = g.conn.execute(text(select_query))
+    book = []
+    for c in cursor:
+        book.append(c)
+    cursor.close
+    title = book[0][1]
+    author_id = book[0][2]
+    description = book[0][3]
+    date = book[0][4]
+
+    cursor = g.conn.execute(text("SELECT name FROM author WHERE author_id=" + str(author_id)))
+    list = []
+    for c in cursor:
+        list.append(c)
+    cursor.close
+    author = list[0][0]
+    return render_template("book.html", title=title, author=author, description=description, date=date)
+
+
 
 @app.route('/user')
 def user():
@@ -185,22 +207,6 @@ def user():
 
     usercontext = dict(collectiondata=collectionnames)
     return render_template("user.html", **usercontext)
-
-
-# Example of adding new data to the database
-@app.route('/add', methods=['POST'])
-def add():
-    # accessing form inputs from user
-    name = request.form['name']
-
-    # passing params in for each variable into query
-    params = {}
-    params["new_name"] = name
-    g.conn.execute(text('INSERT INTO test(name) VALUES (:new_name)'), params)
-    g.conn.commit()
-    return redirect('/')
-
-# Search for books in the database
 
 
 @app.route('/login')

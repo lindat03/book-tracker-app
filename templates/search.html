@@ -10,6 +10,9 @@
   </style>
 
   <script>
+    function load_book(title){
+      window.location.replace("/book/" + title)
+    }
 
   </script>
 
@@ -38,9 +41,9 @@
     </div>
     <div class="search-results-div">
         <div class="book-container">
-            results go here
-            {{titles}}
-            {{ids}}
+          {% for n in titles %}
+          <div class="book" onclick="load_book(this.innerHTML)">{{n}}</div>
+          {% endfor %}
           </div>
     </div>
   </body>
