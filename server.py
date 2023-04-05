@@ -235,6 +235,7 @@ def book_page(title):
     for c in cursor:
         book.append(c)
     cursor.close()
+    book_id = book[0][0]
     title = book[0][1]
     author_id = book[0][2]
     description = book[0][3]
@@ -248,7 +249,16 @@ def book_page(title):
     cursor.close
     author = list[0][0]
 
-    return render_template("book.html", title=title, author=author, description=description, date=date)
+    cursor = g.conn.execute(
+        text("SELECT AVG(rating) FROM user_book WHERE book_id=" + str(book_id)))
+    result = []
+    for c in cursor:
+        result.append(c)
+    cursor.close
+
+    rating = round(result[0][0], 2)
+
+    return render_template("book.html", title=title, author=author, description=description, rating=rating, date=date)
 
 
 @app.route('/user')
