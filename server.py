@@ -196,6 +196,15 @@ def book_page(title):
     cursor.close
     author = list[0][0]
 
+    cursor = g.conn.execute(
+        text("SELECT AVG(rating) FROM user_book WHERE book_id=" + str(book_id)))
+    result = []
+    for c in cursor:
+        result.append(c)
+    cursor.close
+
+    rating = round(result[0][0], 2)
+
     return render_template("book.html", book_id=book_id, title=title, author=author, description=description, date=date)
 
 
