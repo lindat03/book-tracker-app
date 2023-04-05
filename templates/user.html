@@ -12,19 +12,17 @@
         <p><a href="/">Back to Homepage</a></p>
     </div>
     <div class="user-info-div">
-        <h2>My Information</h2>
-
+      <h2>My Information</h2>
     </div>
     <div class="user-collections-div">
         <h2>My Collections</h2>
         <div>
             {% for n in collectiondata %}
-            <div><a href="/collection">{{n}}</a></div>
+            <div class="collection">
+              <a href="{{url_for('collection', collection_id = n.collection_id)}}">{{n.name}}</a>
+            </div>
             {% endfor %}
         </div>
-    </div>
-    <div class="recent-reviews-div">
-        <h2>My Recent Reviews</h2>
     </div>
   </body>
 </html>

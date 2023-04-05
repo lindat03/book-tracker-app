@@ -9,6 +9,7 @@ A debugger such as "pdb" may be helpful for debugging.
 Read about it online.
 """
 import os
+import json
 # accessible as a variable in index.html:
 from sqlalchemy import *
 from sqlalchemy.pool import NullPool
@@ -33,7 +34,8 @@ app = Flask(__name__, template_folder=tmpl_dir)
 # Modify these with your own credentials you received from TA!
 DATABASE_USERNAME = "lt2899"
 DATABASE_PASSWRD = "3463"
-DATABASE_HOST = "34.148.107.47" # change to 34.28.53.86 if you used database 2 for part 2
+# change to 34.28.53.86 if you used database 2 for part 2
+DATABASE_HOST = "34.148.107.47"
 DATABASEURI = f"postgresql://{DATABASE_USERNAME}:{DATABASE_PASSWRD}@{DATABASE_HOST}/project1"
 
 
@@ -92,7 +94,6 @@ def index():
         titles.append(result[0])
     cursor.close()
 
-    
     #
     context = dict(data=titles)
 
@@ -116,12 +117,22 @@ def index():
 def search():
     return render_template("search.html")
 
-@app.route('/collection')
-def collection():
 
-    return render_template("collection.html")
+@app.route('/collection/<collection_id>')
+def collection(collection_id):
+    select_query = "SELECT * FROM collection WHERE collection_id='" + collection_id + "'"
+    cursor = g.conn.execute(text(select_query))
+    info = []
+    for c in cursor:
+        info.append(c)
+    cursor.close
 
+    user_books = g.conn.execute(
+        text("SELECT user_book.*, book.*, author.* FROM user_book JOIN book ON user_book.book_id = book.book_id JOIN author ON book.author_id = author.author_id WHERE collection_id='" + collection_id + "'")
+    ).fetchall()
 
+    collectioncontext = dict(bookdata=user_books)
+    return render_template("collection.html", info=info, **collectioncontext)
 
 
 # search database by book title
@@ -165,6 +176,7 @@ def author_search(author):
 
     return render_template("search.html", titles=relevant, ids=ids)
 
+
 @app.route('/book/<title>')
 def book_page(title):
     select_query = "SELECT * FROM book WHERE title='" + title + "'"
@@ -172,13 +184,14 @@ def book_page(title):
     book = []
     for c in cursor:
         book.append(c)
-    cursor.close
+    cursor.close()
     title = book[0][1]
     author_id = book[0][2]
     description = book[0][3]
     date = book[0][4]
 
-    cursor = g.conn.execute(text("SELECT name FROM author WHERE author_id=" + str(author_id)))
+    cursor = g.conn.execute(
+        text("SELECT name FROM author WHERE author_id=" + str(author_id)))
     list = []
     for c in cursor:
         list.append(c)
@@ -187,18 +200,24 @@ def book_page(title):
     return render_template("book.html", title=title, author=author, description=description, date=date)
 
 
-
 @app.route('/user')
 def user():
+    # select_query = "SELECT * FROM user WHERE user_id = " + str(USER)
+    # cursor = g.conn.execute(text(select_query))
+    # user = []
+    # for c in cursor:
+    #     user.append(c)
+    # cursor.close()
+    # name = user[0][1]
+    # age = user[0][2]
+    # id = user[0][0]
 
-    select_query = "SELECT name from collection WHERE user_id=" + str(USER)
-    cursor = g.conn.execute(text(select_query))
-    collectionnames = []
-    for result in cursor:
-        collectionnames.append(result[0])
-    cursor.close()
+    collections = g.conn.execute(
+        text('SELECT * FROM collection WHERE user_id=' + str(USER))
+    ).fetchall()
 
-    usercontext = dict(collectiondata=collectionnames)
+    usercontext = dict(collectiondata=collections)
+
     return render_template("user.html", **usercontext)
 
 

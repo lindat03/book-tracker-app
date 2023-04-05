@@ -11,7 +11,7 @@
 
   <body>
     <div class="header-div">
-        <h1>Collection Name</h1>
+        <h1>{{info[0][1]}}</h1>
         <p><a href="/user">Back to Profile</a></p>
     </div>
     <div class="collection-settings-div">
@@ -22,19 +22,21 @@
             <button type="button">Date Read</button>
         </div>
         <button>Edit Collection Title</button>
-        <button>Add Books to Collection</button>
+
     </div>
     <div class="collection-books-div">
         <div class="book-container">
+          {% for bookinfo in bookdata %}
             <h3 class="book-title">
-              Book Title
+              {{bookinfo.title}}
             </h3>
-            <p class="book-author">Book Author</p>
-            <p class="book-rating">Rating</p>
-            <p class="book-review">Review</p>
+            <p class="book-author">{{bookinfo.name}}</p>
+            <p class="book-rating">{{bookinfo.rating}}</p>
+            <p class="book-review">{{bookinfo.review}}</p>
             <button>Edit Review</button>
             <button>Delete from Collection</button>
-          </div>
+          {% endfor %}
+        </div>
     </div>
   </body>
 </html>
