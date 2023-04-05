@@ -38,8 +38,8 @@
               <span class="book-rating">Rating: {{bookinfo.rating}}</span><br>
               <span class="book-review">{{bookinfo.review}}</span><br>
             </p>
-            <button>Edit Review</button>
-            <button>Delete from Collection</button>
+            <!-- <button>Edit Review</button> -->
+            <a href="{{url_for('deletereview', id = bookinfo.user_book_id)}}">Delete from Collection</a>
           {% endfor %}
         </div>
     </div>

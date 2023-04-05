@@ -267,6 +267,26 @@ def review(book_id):
         else:
             return render_template("reviewerror.html")
 
+@app.route('/deletereview/<id>', methods=['GET', 'POST'])
+def deletereview(id):
+    if request.method == 'POST':
+        if request.form['btn'] == 'Yes':
+            delete_query = "DELETE FROM user_book WHERE user_book_id ='"+id+"'"
+            g.conn.execute(text(delete_query))
+            g.conn.commit()
+            return redirect("/user")
+        elif request.form['btn'] == 'No':
+            return redirect('/user')
+    elif request.method == 'GET':
+        info = []
+        cursor = g.conn.execute(
+            text("SELECT book.title, user_book.* FROM user_book JOIN book ON book.book_id = user_book.book_id WHERE user_book_id='" + id + "'"))
+        for c in cursor:
+            info.append(c)
+        cursor.close()
+        return render_template("reviewdelete.html", info=info)
+
+
 
 @app.route('/collection/<collection_id>')
 def collection(collection_id):
