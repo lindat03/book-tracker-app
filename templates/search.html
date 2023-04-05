@@ -28,6 +28,9 @@
     function load_book(title){
       window.location.replace("/book/" + title)
     }
+    function sort(type){
+      window.location.replace("/sort/" + type)
+    }
   </script>
 
   <body>
@@ -44,7 +47,7 @@
         Search by author: <input type="text" name="name" id="author"/>
         <button id="author_search" onclick="asearch()">Search</button>
       </p>
-      <h2>Sort By: <button type="button">Ratings</button> <button type="button">Date Published</button></h2>
+      <h2>Sort By: <button type="button" onclick="sort('ratings')">Ratings</button> <button type="button" onclick="sort('date')">Date Published</button></h2>
     </div>
     <div class="search-results-div">
         <div class="book-container">

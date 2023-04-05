@@ -47,6 +47,9 @@ engine = create_engine(DATABASEURI)
 # active user id
 USER = 2
 
+# current term searched by user
+CURRENT_SEARCH = ""
+
 
 @app.before_request
 def before_request():
@@ -136,8 +139,10 @@ def search():
 @app.route('/search/title/<title>')
 def title_search(title):
 
-    ids = []
+    global CURRENT_SEARCH
+    CURRENT_SEARCH = title
 
+    ids = []
     select_query = "SELECT * FROM book"
     cursor = g.conn.execute(text(select_query))
     relevant = []
@@ -172,6 +177,26 @@ def author_search(author):
     cursor.close
 
     return render_template("search.html", titles=relevant, ids=ids)
+
+@app.route('/sort/<type>')
+def sort_books(type):
+
+    global CURRENT_SEARCH
+
+    if type == "ratings":
+        select_query = "SELECT book.title, AVG(user_book.rating) FROM book JOIN user_book ON book.book_id = user_book.book_id GROUP BY book.title, user_book.rating ORDER BY user_book.rating DESC"
+    elif type == "date":
+        select_query = "SELECT title, date_written FROM book GROUP BY title, date_written ORDER BY date_written DESC"
+    cursor = g.conn.execute(text(select_query))
+
+    titles = []
+    for book in cursor:
+        if CURRENT_SEARCH in book[0]:
+            titles.append(book[0])
+    cursor.close
+
+    return render_template("search.html", titles=titles)
+    
 
 
 @app.route('/book/<title>')
