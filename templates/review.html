@@ -1,0 +1,57 @@
+<html>
+  <style>
+    body {
+      font-size: 15pt;
+      font-family: arial;
+    }
+
+    #review{
+        width: 100%;
+        height: 30px;
+        padding: 10px;
+        box-sizing: border-box;
+        font-size: 16px;
+        line-height: 1.4em;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        resize: none;
+        text-align: left;
+    }
+  </style>
+
+  <body>
+    <div class="header-div">
+        <h1>Create New Review for {{bookinfo[0][1]}}</h1>
+        <p><a href="/search">Back to Search</a></p>
+    </div>
+    <div class="new-review-div">
+        <form method="POST" action="/review/{{book_id}}">
+            <p>Review:</p>
+            <input type="text" name="review" id="review"><br>
+            <p>Rating:</p>
+            <p>
+                <input type="radio" name="rating" value="1"> 1<br>
+                <input type="radio" name="rating" value="2"> 2<br>
+                <input type="radio" name="rating" value="3"> 3<br>
+                <input type="radio" name="rating" value="4"> 4<br>
+                <input type="radio" name="rating" value="5"> 5<br>
+            </p>
+            <p>Reading Status:</p>
+            <p>
+                <input type="radio" name="reading-status" value="Not Started"> Not Started<br>
+                <input type="radio" name="reading-status" value="Currently Reading"> Currently Reading<br>
+                <input type="radio" name="reading-status" value="Finished"> Finished<br>
+                <input type="radio" name="reading-status" value="Abandoned"> Abandoned<br>
+            </p>
+            <p>Add to Collection: </p>
+            <p>
+                {% for n in collectiondata %}
+                <input type="radio" name="collection" value="{{n.collection_id}}"> {{n.name}} <br>
+                {% endfor %}
+            </p>
+            <input type="submit" value="Finish Reviewing">
+
+        </form>
+    </div>
+  </body>
+</html>

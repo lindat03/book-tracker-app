@@ -130,62 +130,9 @@ def index():
 def search():
     return render_template("search.html")
 
-
-@app.route('/collection/<collection_id>')
-def collection(collection_id):
-    select_query = "SELECT * FROM collection WHERE collection_id='" + collection_id + "'"
-    cursor = g.conn.execute(text(select_query))
-    info = []
-    for c in cursor:
-        info.append(c)
-    cursor.close()
-
-    user_books = g.conn.execute(
-        text("SELECT user_book.*, book.*, author.* FROM user_book JOIN book ON user_book.book_id = book.book_id JOIN author ON book.author_id = author.author_id WHERE collection_id='" + collection_id + "'")
-    ).fetchall()
-
-    collectioncontext = dict(bookdata=user_books)
-    return render_template("collection.html", info=info, **collectioncontext)
-
-
-@app.route('/createnewcollection', methods=['POST', 'GET'])
-def createnewcollection():
-    if request.method == 'POST':
-        # accessing form inputs from user
-        print("POST CALLED")
-        name = request.form['name']
-        # passing params in for each variable into query
-        params = {}
-        params["new_name"] = name
-        g.conn.execute(
-            text('INSERT INTO collection(name, user_id) VALUES (:new_name, 2)'), params)
-        g.conn.commit()
-        return redirect('/user')
-    elif request.method == 'GET':
-        return render_template("createnewcollection.html")
-
-
-@app.route('/deletecollection/<id>', methods=['GET', 'POST'])
-def deletecollection(id):
-    if request.method == 'POST':
-        if request.form['btn'] == 'Yes':
-            delete_query = "DELETE FROM collection WHERE collection_id ='"+id+"'"
-            g.conn.execute(text(delete_query))
-            g.conn.commit()
-            return redirect("/user")
-        elif request.form['btn'] == 'No':
-            return redirect('/user')
-    elif request.method == 'GET':
-        info = []
-        cursor = g.conn.execute(
-            text("SELECT * FROM collection WHERE collection_id='" + id + "'"))
-        for c in cursor:
-            info.append(c)
-        cursor.close()
-        return render_template("deletecollection.html", info=info)
-
-
 # search database by book title
+
+
 @app.route('/search/title/<title>')
 def title_search(title):
 
@@ -235,6 +182,7 @@ def book_page(title):
     for c in cursor:
         book.append(c)
     cursor.close()
+    book_id = book[0][0]
     title = book[0][1]
     author_id = book[0][2]
     description = book[0][3]
@@ -248,14 +196,113 @@ def book_page(title):
     cursor.close
     author = list[0][0]
 
-    return render_template("book.html", title=title, author=author, description=description, date=date)
+    return render_template("book.html", book_id=book_id, title=title, author=author, description=description, date=date)
+
+
+@app.route('/review/<book_id>', methods=['GET', 'POST'])
+def review(book_id):
+    if request.method == 'POST':
+        params = {}
+        params["user_id"] = str(USER)
+        params["book_id"] = book_id
+        params["rating"] = request.form['rating']
+        params["review"] = request.form['review']
+        params["date_read"] = '2023-04-05'
+        params["reading_status"] = request.form['reading-status']
+        params["collection_id"] = request.form['collection']
+
+        insert_query = '''INSERT INTO user_book(user_id, book_id, rating, review, date_read, 
+            reading_status, collection_id)
+            VALUES (:user_id, :book_id, :rating, :review, :date_read, :reading_status, :collection_id)
+            '''
+
+        g.conn.execute(text(insert_query), params)
+        g.conn.commit()
+
+        return redirect("/user")
+    elif request.method == 'GET':
+        check_query = "SELECT * FROM user_book WHERE user_id = " + \
+            str(USER) + " AND book_id = " + str(book_id)
+        cursor = g.conn.execute(text(check_query))
+        checkIfValid = []
+        for c in cursor:
+            checkIfValid.append(c)
+        cursor.close()
+
+        if len(checkIfValid) == 0:
+            select_query = "SELECT * FROM book WHERE book_id='" + book_id + "'"
+            cursor = g.conn.execute(text(select_query))
+            bookinfo = []
+            for c in cursor:
+                bookinfo.append(c)
+            cursor.close()
+
+            collections = g.conn.execute(
+                text('SELECT * FROM collection WHERE user_id=' + str(USER))
+            ).fetchall()
+            collectioncontext = dict(collectiondata=collections)
+
+            return render_template("review.html", book_id=book_id, bookinfo=bookinfo, **collectioncontext)
+        else:
+            return render_template("reviewerror.html")
+
+
+@app.route('/collection/<collection_id>')
+def collection(collection_id):
+    select_query = "SELECT * FROM collection WHERE collection_id='" + collection_id + "'"
+    cursor = g.conn.execute(text(select_query))
+    info = []
+    for c in cursor:
+        info.append(c)
+    cursor.close()
+
+    user_books = g.conn.execute(
+        text("SELECT user_book.*, book.*, author.* FROM user_book JOIN book ON user_book.book_id = book.book_id JOIN author ON book.author_id = author.author_id WHERE collection_id='" + collection_id + "'")
+    ).fetchall()
+
+    collectioncontext = dict(bookdata=user_books)
+    return render_template("collection.html", info=info, **collectioncontext)
+
+
+@app.route('/createnewcollection', methods=['POST', 'GET'])
+def createnewcollection():
+    if request.method == 'POST':
+        # accessing form inputs from user
+        name = request.form['name']
+        # passing params in for each variable into query
+        params = {}
+        params["new_name"] = name
+        params["user_id"] = str(USER)
+        g.conn.execute(
+            text('INSERT INTO collection(name, user_id) VALUES (:new_name, :user_id)'), params)
+        g.conn.commit()
+        return redirect('/user')
+    elif request.method == 'GET':
+        return render_template("createnewcollection.html")
+
+
+@app.route('/deletecollection/<id>', methods=['GET', 'POST'])
+def deletecollection(id):
+    if request.method == 'POST':
+        if request.form['btn'] == 'Yes':
+            delete_query = "DELETE FROM collection WHERE collection_id ='"+id+"'"
+            g.conn.execute(text(delete_query))
+            g.conn.commit()
+            return redirect("/user")
+        elif request.form['btn'] == 'No':
+            return redirect('/user')
+    elif request.method == 'GET':
+        info = []
+        cursor = g.conn.execute(
+            text("SELECT * FROM collection WHERE collection_id='" + id + "'"))
+        for c in cursor:
+            info.append(c)
+        cursor.close()
+        return render_template("deletecollection.html", info=info)
 
 
 @app.route('/user')
 def user():
-
-    # TODO: DISPLAY USER INFORMATION
-
     user_info = g.conn.execute(
         text("SELECT * FROM users WHERE user_id=" + str(USER))).fetchall()
     usercontext = dict(userdata=user_info)
@@ -266,7 +313,6 @@ def user():
 
     collectioncontext = dict(collectiondata=collections)
 
-    # return render_template("user.html", **collectioncontext)
     return render_template("user.html", **collectioncontext, **usercontext)
 
 
