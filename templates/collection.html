@@ -23,9 +23,11 @@
         </div>
         <p> </p> -->
         <button>Edit Collection Title</button>
-        <form action="{{ url_for('deletecollection', id=info[0][1]) }}" method="DELETE">
+        <a href="{{url_for('deletecollection', id = info[0][0])}}">Delete Collection</a>
+        <!-- <form method="DELETE" action="/deletecollection/{{info[0][0]}}">
           <input type="submit" value="Delete Collection">
-        </form>
+        </form> -->
+        <!-- <a href="{{url_for('deletecollection', id = info[0][0])}}" method="DELETE">Delete Collection</a> -->
 
     </div>
     <div class="collection-books-div">

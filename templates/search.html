@@ -15,12 +15,14 @@
     document.getElementById("title_search").addEventListener("click", search())
     function tsearch(){
       let title = document.getElementById("title").value
-      location.href = window.location.host + 'search/title/' + title
+      // location.href = window.location.host + 'search/title/' + title
+      window.location.replace("/search/title/" + title)
     }
     document.getElementById("author_search").addEventListener("click", search())
     function asearch(){
       let author = document.getElementById("author").value
-      location.href = window.location.host + 'search/author/' + author
+      // location.href = window.location.host + 'search/author/' + author
+      window.location.replace("/search/author/" + author)
     }
     function load_book(title){
       window.location.replace("/book/" + title)
@@ -41,9 +43,7 @@
         Search by author: <input type="text" name="name" id="author"/>
         <button id="author_search" onclick="asearch()">Search</button>
       </p>
-      <h2>Sort By:</h2>
-      <button type="button">Ratings</button>
-      <button type="button">Date Published</button>
+      <h2>Sort By: <button type="button">Ratings</button> <button type="button">Date Published</button></h2>
     </div>
     <div class="search-results-div">
         <div class="book-container">
