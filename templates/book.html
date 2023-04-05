@@ -16,8 +16,7 @@
         <p class="book-description">{{description}}</p>
         <p class="book-rating">Average Rating: {{rating}}</p>
         <p class="book-publish-date">{{date}}</p>
-        <button>Review</button>
-        <button>Add to Collection</button>
+        <a href="{{url_for('review', book_id = book_id)}}">Review and Add to a Collection</a>
     </div>
     
   </body>
