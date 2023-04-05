@@ -139,49 +139,36 @@ def search():
 @app.route('/search/title/<title>')
 def title_search(title):
 
-    global CURRENT_SEARCH
-    CURRENT_SEARCH = title
-
-    ids = []
     select_query = "SELECT * FROM book"
     cursor = g.conn.execute(text(select_query))
     relevant = []
     for book in cursor:
         if title in book[1]:
             relevant.append(book[1])
-            ids.append(book[0])
     cursor.close
 
-    return render_template("search.html", titles=relevant, ids=ids)
+    return render_template("search.html", titles=relevant)
 
 
 # search database by author
 @app.route('/search/author/<author>')
 def author_search(author):
 
-    select_query = "SELECT * FROM author"
+    select_query = "SELECT book.title, author.name FROM author JOIN book ON author.author_id = book.author_id"
     cursor = g.conn.execute(text(select_query))
-    author_ids = []
-    for person in cursor:
-        if author in person[1]:
-            author_ids.append(person[0])
-    cursor.close
 
-    cursor = g.conn.execute(text("SELECT * FROM book"))
     relevant = []
-    ids = []
-    for book in cursor:
-        if book[2] in author_ids:
-            relevant.append(book[1])
-            ids.append(book[0])
+    for c in cursor:
+        if author in c[1]:
+            relevant.append(c[0])
     cursor.close
 
-    return render_template("search.html", titles=relevant, ids=ids)
+    return render_template("search.html", titles=relevant)
 
-@app.route('/sort/<type>')
-def sort_books(type):
+@app.route('/sort/<type>/<books>')
+def sort_books(type, books):
 
-    global CURRENT_SEARCH
+    books = books.split(',')
 
     if type == "ratings":
         select_query = "SELECT book.title, AVG(user_book.rating) FROM book JOIN user_book ON book.book_id = user_book.book_id GROUP BY book.title, user_book.rating ORDER BY user_book.rating DESC"
@@ -191,7 +178,7 @@ def sort_books(type):
 
     titles = []
     for book in cursor:
-        if CURRENT_SEARCH in book[0]:
+        if book[0] in books:
             titles.append(book[0])
     cursor.close
 

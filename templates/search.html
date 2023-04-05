@@ -28,7 +28,12 @@
       window.location.replace("/book/" + title)
     }
     function sort(type){
-      window.location.replace("/sort/" + type)
+      books = document.getElementsByClassName("book")
+      book_string = ""
+      for (let i=0; i<books.length; i++){
+        book_string += "," + books[i].innerHTML
+      }
+      window.location.replace("/sort/" + type + "/" + book_string)
     }
   </script>
 
