@@ -84,24 +84,39 @@ def index():
     # DEBUG: this is debugging code to see what request looks like
     print(request.args)
 
-    #
-    # example of a database query
-    #
-    select_query = "SELECT title from book"
+    select_query = "SELECT title FROM book WHERE genre = 'Classic'"
     cursor = g.conn.execute(text(select_query))
-    titles = []
+    classicsTitles = []
     for result in cursor:
-        titles.append(result[0])
+        classicsTitles.append(result[0])
+    cursor.close()
+
+    select_query = "SELECT title FROM book WHERE genre = 'Fantasy'"
+    cursor = g.conn.execute(text(select_query))
+    fantasyTitles = []
+    for result in cursor:
+        fantasyTitles.append(result[0])
+    cursor.close()
+
+    select_query = "SELECT title FROM book WHERE genre = 'Science Fiction'"
+    cursor = g.conn.execute(text(select_query))
+    scienceTitles = []
+    for result in cursor:
+        scienceTitles.append(result[0])
     cursor.close()
 
     #
-    context = dict(data=titles)
+    classiccontext = dict(classicdata=classicsTitles)
+    fantasycontext = dict(fantasydata=fantasyTitles)
+    sciencecontext = dict(sciencedata=scienceTitles)
+
+
 
     #
     # render_template looks in the templates/ folder for files.
     # for example, the below file reads template/index.html
     #
-    return render_template("index.html", **context)
+    return render_template("index.html", **classiccontext, **fantasycontext, **sciencecontext)
 
 #
 # This is an example of a different path.  You can see it at:
@@ -133,6 +148,31 @@ def collection(collection_id):
 
     collectioncontext = dict(bookdata=user_books)
     return render_template("collection.html", info=info, **collectioncontext)
+
+
+
+@app.route('/createnewcollection', methods=['POST', 'GET'])
+def createnewcollection():
+    if request.method == 'POST':
+        # accessing form inputs from user
+        print("POST CALLED")
+        name = request.form['name']
+        # passing params in for each variable into query
+        params = {}
+        params["new_name"] = name
+        g.conn.execute(text('INSERT INTO collection(name, user_id) VALUES (:new_name, 2)'), params)
+        g.conn.commit()
+        return redirect('/user')
+    elif request.method == 'GET':
+        return render_template("createnewcollection.html")
+
+@app.route('/deletecollection/<id>', methods=['DELETE'])
+def deletecollection(id):
+    params={}
+    params["delete_id"] = id
+    g.conn.execute(text('DELETE FROM collection WHERE collection_id=:delete_id'), params)
+    g.conn.commit()
+    return redirect('/user')
 
 
 # search database by book title
@@ -197,28 +237,28 @@ def book_page(title):
         list.append(c)
     cursor.close
     author = list[0][0]
+
     return render_template("book.html", title=title, author=author, description=description, date=date)
 
 
 @app.route('/user')
 def user():
-    # select_query = "SELECT * FROM user WHERE user_id = " + str(USER)
-    # cursor = g.conn.execute(text(select_query))
-    # user = []
-    # for c in cursor:
-    #     user.append(c)
-    # cursor.close()
-    # name = user[0][1]
-    # age = user[0][2]
-    # id = user[0][0]
+
+    #TODO: DISPLAY USER INFORMATION
+
+
+    user_info = g.conn.execute(text("SELECT * FROM users WHERE user_id=" + str(USER))).fetchall()
+    usercontext = dict(userdata = user_info)
+
 
     collections = g.conn.execute(
         text('SELECT * FROM collection WHERE user_id=' + str(USER))
     ).fetchall()
 
-    usercontext = dict(collectiondata=collections)
+    collectioncontext = dict(collectiondata=collections)
 
-    return render_template("user.html", **usercontext)
+    # return render_template("user.html", **collectioncontext)
+    return render_template("user.html", **collectioncontext, **usercontext)
 
 
 @app.route('/login')

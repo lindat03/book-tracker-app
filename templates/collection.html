@@ -15,13 +15,17 @@
         <p><a href="/user">Back to Profile</a></p>
     </div>
     <div class="collection-settings-div">
-        <div class="sorting-div">
+        <!-- <div class="sorting-div">
             <h2>Sort By:</h2>
             <button type="button">Alphabetically</button>
             <button type="button">Ratings</button>
             <button type="button">Date Read</button>
         </div>
+        <p> </p> -->
         <button>Edit Collection Title</button>
+        <form action="{{ url_for('deletecollection', id=info[0][1]) }}" method="DELETE">
+          <input type="submit" value="Delete Collection">
+        </form>
 
     </div>
     <div class="collection-books-div">

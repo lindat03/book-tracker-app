@@ -43,15 +43,29 @@
 
       <div>
         <p>
-          {% for n in data %}
+          {% for n in classicdata %}
           <div class="book" onclick="load_book(this.innerHTML)">{{n}}</div>
           {% endfor %}
         </p>
       </div>
 
       <h2>Popular Fantasy Books</h2>
+      <div>
+        <p>
+          {% for n in fantasydata %}
+          <div class="book" onclick="load_book(this.innerHTML)">{{n}}</div>
+          {% endfor %}
+        </p>
+      </div>
 
-      <h2>Popular Realistic Fiction Books</h2>
+      <h2>Popular Science Fiction Books</h2>
+      <div>
+        <p>
+          {% for n in sciencedata %}
+          <div class="book" onclick="load_book(this.innerHTML)">{{n}}</div>
+          {% endfor %}
+        </p>
+      </div>
     </div>
 
 
